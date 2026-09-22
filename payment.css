@@ -1,0 +1,37 @@
+#payment-layer{position:absolute;inset:0;z-index:30}
+#payment-layer[hidden]{display:none}
+.payment-scrim{position:absolute;inset:0;background:#0006;width:100%;height:100%}
+.payment-sheet{position:absolute;bottom:0;width:100%;height:526px;max-height:calc(100% - 44px);background:white;border-radius:28px 28px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:payment-enter 200ms ease-out}
+.payment-grip{height:20px;flex-shrink:0;display:flex;justify-content:center;padding-top:8px;touch-action:none}
+.payment-grip>span{width:39px;height:4px;border-radius:3px;background:#ebeae8}
+.payment-header{height:52px;flex-shrink:0;display:grid;place-items:center;position:relative}
+.payment-header h2{font:800 16px/20px 'Avito Sans Text',sans-serif;padding-bottom:2px}
+.payment-close{position:absolute;left:6px;top:6px;width:40px;height:40px;display:grid;place-items:center}
+.payment-close img{width:24px;height:24px}
+.payment-options{padding:0 16px;overflow-y:auto;overscroll-behavior:contain;min-height:0;flex:1}
+.payment-option{height:70px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.payment-symbol{position:relative;display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;flex-shrink:0;border-radius:16px;background:#f2f1f0}
+.payment-symbol>.payment-brand{width:24px;height:24px;object-fit:contain}
+.payment-symbol-sbp>.payment-brand{width:28.8px;height:28.8px}
+.payment-symbol-sber{background:#21a037}
+.payment-symbol-sber>.payment-brand{width:48px;height:48px;border-radius:16px}
+.payment-symbol-tbank{background:#ffdd2d}
+.payment-symbol-tbank>.payment-brand{width:28.8px;height:28.8px;transform:translateY(1.2px)}
+.payment-symbol-new-card>.payment-brand{width:20px;height:20px}
+.payment-symbol-cash{overflow:hidden}
+.payment-symbol-cash>.payment-brand{position:absolute;max-width:none;width:375px;height:526px;left:-16px;top:-363px;object-fit:fill}
+.payment-logo .add-discount img{width:9.413px;height:13.692px}
+.payment-symbol>.payment-addon{position:absolute;right:-5px;top:33px;width:20px;height:20px;padding:2px}
+.payment-copy{min-width:0;flex:1;padding-bottom:2px;font-size:15px;line-height:20px}
+.payment-title{display:flex;align-items:center;gap:6px}
+.payment-badge{font-size:11px;line-height:14px;background:#ff4053;color:white;border-radius:48px;padding:0 4px 1px;white-space:nowrap}
+.payment-subtitle{display:block;font-size:13px;line-height:16px;color:#757575;margin-top:2px}
+.payment-option input{appearance:none;flex-shrink:0;width:24px;height:24px;margin:0;border:0;border-radius:50%;background:#e3e3e3}
+.payment-option input:checked{background:transparent url('assets/payment/26733.svg') center/24px no-repeat}
+.payment-option input:focus-visible,.payment-close:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+.payment-home{position:relative;height:34px;flex-shrink:0}
+.payment-logo>.payment-symbol{width:48px;height:48px}
+.payment-logo:has(.payment-symbol-sber),.payment-logo:has(.payment-symbol-tbank){background:transparent}
+.wallet-discount-icon{width:20px;height:20px}
+@keyframes payment-enter{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.payment-sheet{animation:none}}

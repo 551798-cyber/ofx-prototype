@@ -1,0 +1,36 @@
+/* Browser presentation: no simulated OS status bar or home indicator.
+   Keep navigation, sheet grips and comfortable spacing around live controls. */
+.status,
+.home-indicator { display: none; }
+
+.topbar { height: 48px; }
+.screen-scroll { top: 48px; padding-bottom: 96px; }
+.bottom,
+.checkout-bottom { height: 78px; padding: 13px 10px; }
+.purchase-toast { bottom: 81px; }
+
+.delivery-map-header { height: 90px; }
+.pickup-map { top: 90px; bottom: 143px; }
+.map-filters { top: 97px; }
+.pickup-detail { height: 233px; max-height: calc(100% - 136px); }
+.pickup-detail.expanded { height: 338px; }
+.pickup-footer { height: 115px; padding-bottom: 16px; }
+
+.address-sheet { height: 338px; }
+.address-sheet-footer { height: 90px; padding-bottom: 16px; }
+.payment-sheet { height: 508px; }
+.payment-home { height: 16px; }
+.save-sheet { height: 496px; }
+.bonus-sheet { height: 482px; }
+.info-sheet-footer,
+.bonus-sheet .info-sheet-footer { height: 68px; padding-bottom: 16px; }
+
+/* Source-backed recommendation pages retain the established browser chrome. */
+.real-listing .gallery { scroll-padding-left:16px; padding-right:16px; }
+.real-listing .photo { display:flex; justify-content:center; background:var(--gray); }
+.real-listing .photo > .asset-crop { width:var(--photo-width,100%); }
+.real-listing .delivery-option .blue { color:#0099f7; }
+.real-listing .seller-response { margin-top:6px; font-size:15px; line-height:22px; }
+.real-listing .listing-reviews p { margin:16px 0; font-size:15px; line-height:22px; }
+.real-listing .product-recs { align-items:flex-start; }
+.real-listing .seller-full { min-height:0; }

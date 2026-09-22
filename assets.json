@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "rec-0271",
+      "path": "assets/listing/IMG_0271.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0272",
+      "path": "assets/listing/IMG_0272.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0274",
+      "path": "assets/listing/IMG_0274.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0275",
+      "path": "assets/listing/IMG_0275.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0276",
+      "path": "assets/listing/IMG_0276.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0277",
+      "path": "assets/listing/IMG_0277.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0278",
+      "path": "assets/listing/IMG_0278.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "rec-0282",
+      "path": "assets/listing/IMG_0282.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-premiata-laces",
+      "path": "assets/catalog/premiata-laces.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-flat-laces",
+      "path": "assets/catalog/flat-laces.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-textile-dye",
+      "path": "assets/catalog/textile-dye.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-tarrago",
+      "path": "assets/catalog/tarrago.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-master",
+      "path": "assets/catalog/master.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-nike-black",
+      "path": "assets/catalog/nike-black.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "catalog-adidas",
+      "path": "assets/catalog/adidas.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-modes-pin.svg",
+      "path": "assets/delivery-modes/pin.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-modes-seller-pin.svg",
+      "path": "assets/delivery-modes/seller-pin.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-modes-metro.svg",
+      "path": "assets/delivery-modes/metro.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-modes-walk.svg",
+      "path": "assets/delivery-modes/walk.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-modes-copy.svg",
+      "path": "assets/delivery-modes/copy.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-modes-location.svg",
+      "path": "assets/delivery-modes/location.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "bundle-coat",
+      "path": "assets/bundle/coat.png",
+      "kind": "image",
+      "used": false
+    },
+    {
+      "id": "bundle-pants",
+      "path": "assets/bundle/pants.jpg",
+      "kind": "image",
+      "used": false
+    },
+    {
+      "id": "bundle-rating",
+      "path": "assets/bundle/rating.svg",
+      "kind": "image",
+      "used": false
+    },
+    {
+      "id": "bundle-back",
+      "path": "assets/bundle/back.svg",
+      "kind": "image",
+      "used": false
+    },
+    {
+      "id": "info-save-background.png",
+      "path": "assets/info/save-background.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "info-save-hero.png",
+      "path": "assets/info/save-hero.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "info-bonus-banner.png",
+      "path": "assets/info/bonus-banner.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "info-close.svg",
+      "path": "assets/info/close.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "info-850bc.svg",
+      "path": "assets/info/850bc.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "info-a6f56.svg",
+      "path": "assets/info/a6f56.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "info-b69d1.svg",
+      "path": "assets/info/b69d1.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-115e7.svg",
+      "path": "assets/payment/115e7.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-26733.svg",
+      "path": "assets/payment/26733.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-5d093.svg",
+      "path": "assets/payment/5d093.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-85ab0.svg",
+      "path": "assets/payment/85ab0.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-af960.svg",
+      "path": "assets/payment/af960.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-cash-reference",
+      "path": "assets/payment/methods-reference.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-e6483.svg",
+      "path": "assets/payment/e6483.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "payment-f21ac.svg",
+      "path": "assets/payment/f21ac.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "04912.svg",
+      "path": "assets/04912.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "06527.svg",
+      "path": "assets/06527.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "08eba.svg",
+      "path": "assets/08eba.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "0fd6b.svg",
+      "path": "assets/0fd6b.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "126b9.svg",
+      "path": "assets/126b9.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "14405.svg",
+      "path": "assets/14405.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "1be5a.jpg",
+      "path": "assets/1be5a.jpg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "29bf1.svg",
+      "path": "assets/29bf1.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "38b88.svg",
+      "path": "assets/38b88.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "38ff4.svg",
+      "path": "assets/38ff4.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "40697.png",
+      "path": "assets/40697.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "40866.svg",
+      "path": "assets/40866.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "4226f.svg",
+      "path": "assets/4226f.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "44fea.jpg",
+      "path": "assets/44fea.jpg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "47ca6.svg",
+      "path": "assets/47ca6.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "4e51c.svg",
+      "path": "assets/4e51c.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "4f8d0.svg",
+      "path": "assets/4f8d0.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "60d3d.png",
+      "path": "assets/60d3d.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "616e0.png",
+      "path": "assets/616e0.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "61cb0.svg",
+      "path": "assets/61cb0.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "639c9.png",
+      "path": "assets/639c9.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "69620.svg",
+      "path": "assets/69620.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "6c449.png",
+      "path": "assets/6c449.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "6cfc3.png",
+      "path": "assets/6cfc3.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "75c0d.svg",
+      "path": "assets/75c0d.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "774cb.svg",
+      "path": "assets/774cb.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "77eaa.png",
+      "path": "assets/77eaa.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "84108.svg",
+      "path": "assets/84108.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "8ca06.svg",
+      "path": "assets/8ca06.svg",
+      "kind": "image",
+      "used": false
+    },
+    {
+      "id": "93c6e.svg",
+      "path": "assets/93c6e.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "96df1.png",
+      "path": "assets/96df1.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "99e1b.png",
+      "path": "assets/99e1b.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "9c494.svg",
+      "path": "assets/9c494.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "9eab2.svg",
+      "path": "assets/9eab2.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "anchor-1-175.svg",
+      "path": "assets/anchor-1-175.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "anchor-1-2268.svg",
+      "path": "assets/anchor-1-2268.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "anchor-1-2315.svg",
+      "path": "assets/anchor-1-2315.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "anchor-1-2325.svg",
+      "path": "assets/anchor-1-2325.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "b3485.svg",
+      "path": "assets/b3485.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "b764d.svg",
+      "path": "assets/b764d.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "b90f5.svg",
+      "path": "assets/b90f5.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "b9b18.svg",
+      "path": "assets/b9b18.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "bce16.png",
+      "path": "assets/bce16.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "c3ed6.png",
+      "path": "assets/c3ed6.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "caa9b.svg",
+      "path": "assets/caa9b.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "d0a2e.jpg",
+      "path": "assets/d0a2e.jpg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "d2236.svg",
+      "path": "assets/d2236.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "def63.svg",
+      "path": "assets/def63.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "e0764.svg",
+      "path": "assets/e0764.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "e3120.png",
+      "path": "assets/e3120.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "f20b4.svg",
+      "path": "assets/f20b4.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "font-regular",
+      "path": "assets/prototype-regular.ttf",
+      "kind": "font",
+      "used": false,
+      "family": "Avito Mobile Sans"
+    },
+    {
+      "id": "font-bold",
+      "path": "assets/prototype-bold.ttf",
+      "kind": "font",
+      "used": false,
+      "family": "Avito Mobile Sans"
+    },
+    {
+      "id": "font-avito-text-400",
+      "path": "assets/fonts/AvitoSansText-Regular.woff2",
+      "kind": "font",
+      "used": true,
+      "family": "Avito Sans Text",
+      "weight": 400
+    },
+    {
+      "id": "font-avito-text-500",
+      "path": "assets/fonts/AvitoSansText-Medium.woff2",
+      "kind": "font",
+      "used": true,
+      "family": "Avito Sans Text",
+      "weight": 500
+    },
+    {
+      "id": "font-avito-text-600",
+      "path": "assets/fonts/AvitoSansText-SemiBold.woff2",
+      "kind": "font",
+      "used": true,
+      "family": "Avito Sans Text",
+      "weight": 600
+    },
+    {
+      "id": "font-avito-text-800",
+      "path": "assets/fonts/AvitoSansText-ExtraBold.woff2",
+      "kind": "font",
+      "used": true,
+      "family": "Avito Sans Text",
+      "weight": 800
+    },
+    {
+      "id": "font-avito-display-800",
+      "path": "assets/fonts/AvitoSansDisplay-ExtraBold.woff2",
+      "kind": "font",
+      "used": true,
+      "family": "Avito Sans Display",
+      "weight": 800
+    },
+    {
+      "id": "listing-241",
+      "path": "assets/listing/IMG_0241.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-242",
+      "path": "assets/listing/IMG_0242.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-244",
+      "path": "assets/listing/IMG_0244.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-245",
+      "path": "assets/listing/IMG_0245.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-247",
+      "path": "assets/listing/IMG_0247.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-248",
+      "path": "assets/listing/IMG_0248.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-249",
+      "path": "assets/listing/IMG_0249.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-250",
+      "path": "assets/listing/IMG_0250.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "listing-251",
+      "path": "assets/listing/IMG_0251.PNG",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-38e5e.png",
+      "path": "assets/delivery/38e5e.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-56c9e.png",
+      "path": "assets/delivery/56c9e.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-139e1.png",
+      "path": "assets/delivery/139e1.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-497e1.svg",
+      "path": "assets/delivery/497e1.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-2002d.svg",
+      "path": "assets/delivery/2002d.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-f5b4a.svg",
+      "path": "assets/delivery/f5b4a.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-23189.svg",
+      "path": "assets/delivery/23189.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-e53e8.svg",
+      "path": "assets/delivery/e53e8.svg",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "delivery-add.svg",
+      "path": "assets/delivery/add.svg",
+      "kind": "image",
+      "used": true
+    }
+  ]
+}

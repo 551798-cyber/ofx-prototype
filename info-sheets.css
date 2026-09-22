@@ -1,0 +1,32 @@
+#info-layer{position:absolute;inset:0;z-index:30}
+#info-layer[hidden]{display:none}
+.info-scrim{position:absolute;inset:0;width:100%;height:100%;background:#0006}
+.info-sheet{position:absolute;bottom:0;left:0;right:0;background:white;border-radius:28px 28px 0 0;overflow:hidden;display:flex;flex-direction:column;max-height:calc(100% - 44px);animation:payment-enter 200ms ease-out}
+.save-sheet{height:514px;border-radius:24px 24px 0 0}
+.bonus-sheet{height:498px}
+.info-sheet-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.info-close{position:absolute;right:6px;top:22px;width:44px;height:44px;display:grid;place-items:center;z-index:3}
+.info-close img{width:24px;height:24px}
+.info-grip{z-index:3}
+.info-sheet-footer{position:relative;flex-shrink:0;height:86px;padding:0 16px 34px;background:white}
+.bonus-sheet .info-sheet-footer{height:84px;padding-bottom:32px}
+.info-sheet-footer .button{width:100%;height:52px;border-radius:16px}
+.save-hero{position:relative;height:234px;overflow:hidden}
+.save-background{position:absolute;left:0;top:0;width:375px;height:194px}
+.save-illustration{position:absolute;left:5px;top:-47px;width:392px;height:392px;max-width:none}
+.save-copy{padding:24px 24px 8px}
+.save-copy h2{font:800 21px/26px 'Avito Sans Text',sans-serif}
+.save-copy p{margin-top:12px;font-size:15px;line-height:22px}
+.save-page-indicator{height:32px;display:flex;align-items:center;justify-content:center;gap:4px}
+.save-page-indicator span{width:6px;height:6px;background:#dbdbd9;border-radius:100px}
+.save-page-indicator span:first-child{width:16px;height:5px;background:#000}
+.bonus-hero{height:216px;background:#f5f5f5;overflow:hidden}
+.bonus-hero img{width:376px;height:216px;max-width:none}
+.bonus-copy{padding:24px 16px}
+.bonus-copy h2{font:800 26px/30px 'Avito Sans Display',sans-serif}
+.bonus-copy ul{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:12px}
+.bonus-copy li{display:flex;align-items:flex-start;gap:8px;font-size:15px;line-height:20px}
+.bonus-copy li img{width:16px;height:20px;flex-shrink:0}
+.bonus-copy li:nth-child(2) img{width:14px}
+.bonus-info-trigger{display:inline-flex;align-items:center;gap:4px;font:inherit;text-align:left;min-height:20px}
+@media(prefers-reduced-motion:reduce){.info-sheet{animation:none}}

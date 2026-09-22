@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Прототип OFX</title>
+  <link rel="icon" href="assets/d2236.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=discount-controls-1">
+  <link rel="stylesheet" href="delivery.css?v=delivery-tabs-3">
+  <link rel="stylesheet" href="payment.css?v=payment-1">
+  <link rel="stylesheet" href="info-sheets.css?v=info-1">
+  <link rel="stylesheet" href="browser-layout.css?v=recommendations-1">
+  <link rel="stylesheet" href="bundle.css?v=catalog-1">
+  <link rel="stylesheet" href="delivery-modes.css?v=1">
+</head>
+<body>
+  <div id="viewport">
+    <div id="device">
+      <div id="loader" role="status"><p>Загружаем прототип…</p><progress max="1" value="0"></progress><button id="retry" hidden>Повторить</button></div>
+      <div id="app" inert aria-busy="true"></div>
+      <div id="delivery-layer" hidden></div>
+      <div id="payment-layer" hidden></div>
+      <div id="info-layer" hidden></div>
+      <div id="bundle-layer" hidden></div>
+      <div id="purchase-toast" class="purchase-toast" aria-hidden="true" hidden>Товар добавлен к покупке</div>
+      <div id="announcement" class="sr-only" aria-live="polite"></div>
+    </div>
+  </div>
+  <script type="module" src="app.js?v=recommendations-1"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+.delivery-dots{flex:1;min-width:4px;border-bottom:1px dotted #c2c2c2;align-self:baseline;height:16px}
+.seller-map .delivery-map-header{height:112px}
+.seller-map .delivery-map-header nav{height:52px}
+.seller-map .delivery-map-header nav>button{top:4px}
+.seller-map .delivery-map-tabs{height:60px;padding:5px 16px 11px;gap:6px}
+.seller-map .delivery-map-tabs button{font-size:15px;line-height:20px;padding:12px 16px}
+.seller-order-summary{display:flex;align-items:center;gap:7px;font-size:15px;line-height:20px;max-width:265px}
+.seller-order-summary>:first-child{width:32px;height:32px;border-radius:10px;overflow:hidden;flex-shrink:0;object-fit:cover}
+.seller-map .pickup-map{top:57px;bottom:0}
+.seller-map .map-filters{top:117px;padding-left:14px}
+.seller-map .map-filters button{height:36px;font-size:13px;line-height:18px}
+.seller-map-pin{position:absolute;top:260px;left:180px;width:32px;height:40px}
+.seller-map-pin>img{width:32px;height:40px}
+.seller-pin-caption{position:absolute;bottom:49px;left:-72px;white-space:nowrap;background:white;border-radius:12px;padding:4px 8px;box-shadow:0 4px 8px #0004;font-size:13px;line-height:18px}
+.seller-pin-caption>*{display:block}
+.seller-pin-caption strong{line-height:16px}
+.seller-location{position:absolute;right:13px;bottom:273px;width:48px;height:48px;border-radius:50%;background:white;display:grid;place-items:center;box-shadow:0 4px 24px #0002}
+.seller-location img{width:20px;height:20px}
+.seller-map-detail{position:absolute;bottom:0;width:100%;height:260px;max-height:calc(100% - 170px);border-radius:28px 28px 0 0;background:white;box-shadow:0 4px 24px #0002;display:flex;flex-direction:column;padding-top:24px}
+.seller-map-copy{padding:2px 24px 0;position:relative;overflow-y:auto;min-height:0;flex:1}
+.seller-map-copy h2{font:800 21px/26px 'Avito Sans Text',sans-serif;max-width:285px;padding-right:4px}
+.seller-map-copy>button{position:absolute;right:7px;top:0;width:44px;height:36px;display:grid;place-items:center}
+.seller-map-copy>button img{width:20px;height:20px}
+.seller-map-copy p{font-size:15px;line-height:20px;margin-top:4px}
+.seller-metro{display:flex;align-items:center;gap:2px;margin-top:6px!important}
+.seller-metro img{width:11px;height:20px}
+.seller-metro img:last-child{width:10px}
+.seller-map-copy .seller-fee{display:flex;gap:2px;margin-top:16px}
+.seller-map-detail footer{flex-shrink:0;padding:14px 15px 16px}
+.seller-map-detail footer .button{width:100%;height:52px;border-radius:16px}
+.courier-page{position:absolute;inset:0;background:white;display:flex;flex-direction:column;overflow:hidden}
+.courier-header{height:112px;flex-shrink:0;position:relative;background:white}
+.courier-header nav{height:52px;display:flex;justify-content:center;align-items:center;font-size:15px;line-height:20px}
+.courier-header nav>button{position:absolute;left:4px;top:4px;width:44px;height:44px;display:grid;place-items:center}
+.courier-order-photo{position:absolute;right:16px;top:8px;width:36px;height:36px;border-radius:12px;overflow:hidden}
+.courier-order-photo>img{width:100%;height:100%;object-fit:cover}
+.courier-header h1{font:800 26px/30px 'Avito Sans Display',sans-serif;margin:7px 16px 0}
+.courier-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-bottom:12px}
+.courier-address{padding:16px 10px;background:#f2f1f0}
+.courier-address>div{background:white;border-radius:16px;padding:16px 24px 24px}
+.courier-address p{display:flex;gap:12px;font-size:15px;line-height:20px}
+.courier-address img{width:20px;height:20px;flex-shrink:0}
+.courier-address .button{width:100%;margin-top:16px}
+.courier-slots{padding:23px 16px 0}
+.courier-slots section+section{margin-top:12px}
+.courier-slots h2{font:800 16px/20px 'Avito Sans Text',sans-serif;min-height:23px}
+.courier-slot{height:44px;display:flex;align-items:center;font-size:15px;line-height:20px;cursor:pointer;white-space:nowrap}
+.courier-slot input{appearance:none;flex-shrink:0;width:21px;height:21px;margin:0 12px 0 0;border:0;border-radius:50%;background:#ebeae8}
+.courier-slot input:checked{border:6px solid #141414;background:white}
+.courier-slot input:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+.courier-slot .delivery-dots{align-self:center;margin-top:11px;height:0}
+.courier-footer{flex-shrink:0;padding:10px 10px 16px;background:white;border-radius:22px 22px 0 0;box-shadow:0 4px 30px #0000001a}
+.courier-footer .button{width:100%;height:52px;border-radius:16px}
+.courier-terms{display:block;margin:12px auto 0;font-size:13px;line-height:16px;text-decoration:underline;color:#757575}
