@@ -6,13 +6,14 @@
   <meta name="theme-color" content="#ffffff">
   <title>Прототип OFX</title>
   <link rel="icon" href="assets/d2236.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=discount-controls-1">
-  <link rel="stylesheet" href="delivery.css?v=delivery-tabs-3">
+  <link rel="stylesheet" href="styles.css?v=checkout-selection-1">
+  <link rel="stylesheet" href="delivery.css?v=address-line-1">
   <link rel="stylesheet" href="payment.css?v=payment-1">
   <link rel="stylesheet" href="info-sheets.css?v=info-1">
   <link rel="stylesheet" href="browser-layout.css?v=recommendations-1">
-  <link rel="stylesheet" href="bundle.css?v=catalog-1">
+  <link rel="stylesheet" href="bundle.css?v=checkout-selection-1">
   <link rel="stylesheet" href="delivery-modes.css?v=1">
+  <link rel="stylesheet" href="product-actions.css?v=1">
 </head>
 <body>
   <div id="viewport">
@@ -23,10 +24,12 @@
       <div id="payment-layer" hidden></div>
       <div id="info-layer" hidden></div>
       <div id="bundle-layer" hidden></div>
+      <div id="chat-layer" hidden></div>
+      <div id="favorite-toast" class="favorite-toast" hidden><p>Объявление можно добавить в подборку</p><button disabled title="Подборки не подключены в прототипе">Добавить</button></div>
       <div id="purchase-toast" class="purchase-toast" aria-hidden="true" hidden>Товар добавлен к покупке</div>
       <div id="announcement" class="sr-only" aria-live="polite"></div>
     </div>
   </div>
-  <script type="module" src="app.js?v=recommendations-1"></script>
+  <script type="module" src="app.js?v=checkout-release-1"></script>
 </body>
 </html>

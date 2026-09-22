@@ -1,0 +1,38 @@
+.favorite-button .favorite-heart{width:24px;height:24px;mix-blend-mode:multiply}
+.favorite-button[aria-pressed=true] .favorite-heart{animation:favorite-pop 220ms ease-out}
+@keyframes favorite-pop{0%{transform:scale(.8)}55%{transform:scale(1.12)}100%{transform:scale(1)}}
+.favorite-toast{position:absolute;z-index:25;left:10px;right:10px;bottom:81px;min-height:62px;padding:12px 14px;background:#141414;color:white;border-radius:25px;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px #0002;animation:favorite-toast-in 180ms ease-out}
+.favorite-toast[hidden]{display:none}
+.favorite-toast p{flex:1;font-size:13px;line-height:18px}
+.favorite-toast button{flex-shrink:0;border-radius:12px;background:white;color:#141414;padding:10px 13px;font-size:13px;line-height:18px}
+@keyframes favorite-toast-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+#chat-layer{position:absolute;inset:0;z-index:30;background:#fff}
+#chat-layer[hidden]{display:none}
+#app.chat-underlay[inert]{visibility:visible}
+.seller-chat{height:100%;display:flex;flex-direction:column;background:white;outline:none}
+.chat-header{height:60px;flex-shrink:0;display:flex;gap:8px;align-items:center;padding:6px 12px 6px 4px;box-shadow:0 10px 30px #00000006;z-index:1}
+.chat-close{width:36px;height:44px;display:grid;place-items:center;flex-shrink:0}
+.chat-close img{width:24px;height:24px}
+.chat-thumbnail{width:42px;height:42px;position:relative;flex-shrink:0}
+.chat-thumbnail>img,.chat-thumbnail>.asset-crop{width:42px;height:42px;object-fit:cover;border-radius:9px}
+.chat-thumbnail>.chat-avatar{position:absolute;left:-4px;top:-4px;width:21px;height:21px;border:2px solid white;border-radius:50%}
+.chat-heading{min-width:0}
+.chat-heading h1{font-size:16px;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-heading p{font-size:13px;line-height:18px;margin-top:3px;display:flex;white-space:nowrap}
+.chat-product-title{min-width:0;overflow:hidden;text-overflow:ellipsis}.chat-product-price{flex-shrink:0;white-space:pre}
+.chat-content{flex:1;min-height:110px;overflow-y:auto;overscroll-behavior:contain;display:flex;align-items:center;justify-content:center}
+.chat-empty{display:flex;flex-direction:column;align-items:center;gap:26px;padding:20px 14px;text-align:center;width:100%}
+.chat-illustration{width:130px;height:101px}
+.chat-empty p{font-size:15px;line-height:20px;max-width:320px}
+.chat-compose{flex-shrink:0;padding:16px 14px 18px;background:white;box-shadow:0 -12px 32px #00000005}
+.chat-compose h2{font-family:'Avito Sans Text',sans-serif;font-size:18px;line-height:22px;margin-bottom:14px}
+.chat-suggestions{display:flex;align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:12px}
+.chat-suggestions button{background:#000;color:white;padding:9px 12px;font-size:13px;line-height:18px;border-radius:12px;max-width:100%;text-align:left}
+.chat-input-row{display:flex;gap:8px;align-items:center}
+.chat-input-row>button{width:24px;height:40px;flex-shrink:0;display:grid;place-items:center}
+.chat-input-row input{background:var(--gray);border:0;border-radius:13px;height:40px;padding:0 14px;font:400 16px/20px 'Avito Sans Text',sans-serif;min-width:0;flex:1;color:#000}
+.chat-input-row input::placeholder{color:#858585}
+.chat-tool{width:21px;height:23px}.chat-camera{width:24px;height:20px}.chat-mic{width:18px;height:23px}
+.chat-compact .chat-suggestions,.chat-compact .chat-compose h2{display:none}
+.chat-compact .chat-content{min-height:0}.chat-compact .chat-empty{gap:8px;padding:8px}.chat-compact .chat-illustration{width:90px;height:70px}
+@media(prefers-reduced-motion:reduce){.favorite-button[aria-pressed=true] .favorite-heart,.favorite-toast{animation:none}}

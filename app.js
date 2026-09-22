@@ -1,18 +1,20 @@
 import { products, sellers, productRecommendations, checkoutRecommendations, demoPricing } from './content.js?v=recommendations-1';
 import { checkoutCatalogSeller } from './checkout-catalog.mjs?v=1';
 import { bundlePage, bundleProgress, prepareBundleCatalog } from './bundle.mjs?v=catalog-1';
-import { listingBody } from './listing.js?v=recommendations-1';
+import { listingBody } from './listing.js?v=card-cleanup-1';
 import { calculateTotals } from './pricing.mjs?v=recommendations-1';
 import { setupDelivery } from './delivery.mjs?v=modes-1';
 import { selectDeliveryMethod } from './delivery-modes.mjs?v=1';
 import { setupPayment, paymentIcon, paymentMethods } from './payment.mjs?v=payment-1';
 import { setupInfoSheets } from './info-sheets.mjs?v=info-1';
+import { setupProductActions } from './product-actions.mjs?v=1';
+import { isCheckoutItemSelected, selectedCheckoutCart, toggleCheckoutItem } from './checkout-selection.mjs?v=1';
 
 const app = document.querySelector('#app');
 const bundleLayer = document.querySelector('#bundle-layer');
 let bundleCheckoutScroll = 0;
 const activeMain = () => (state.screen === 'bundle' ? bundleLayer : app).querySelector('main');
-const state = { screen: 'product', productId: 'sneakers', cart: [], quantities: {}, stack: [], bonusEnabled: true, discountsExpanded: true, deliverySelections: {}, paymentMethod: 'wallet', bundleSellers: [checkoutCatalogSeller], bundleSeller: null, bundleRecommendations: [] };
+const state = { screen: 'product', productId: 'sneakers', cart: [], quantities: {}, stack: [], bonusEnabled: true, discountsExpanded: true, deliverySelections: { vladimir: { delivery: 175 } }, checkoutSelections: {}, paymentMethod: 'wallet', bundleSellers: [checkoutCatalogSeller], bundleSeller: null, bundleRecommendations: [] };
 const money = n => `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n)} ₽`;
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const image = (file, className = '', alt = '') => `<img src="assets/${escape(file)}" class="${className}" alt="${escape(alt)}" draggable="false">`;
@@ -24,10 +26,9 @@ function cropAsset(file, [x,y,w,h], className = '', alt = '') {
 function productPhoto(p, className = '', square = true) {
   if (p.imageCrop) { const c = p.imageCrop; return `<span class="product-image-crop ${className}"><img src="assets/${escape(p.image)}" alt="${escape(p.title)}" style="width:${c.width}%;height:${c.height}%;left:${c.left}%;top:${c.top}%"></span>`; }
   if (p.screenshotPhoto) return cropAsset(p.image, square ? [0,551.5,945,945] : [0,394,945,1260],className,p.title);
-  if (p.sourceCrop && p.checkoutOnly) return `<span class="catalog-photo ${className}"><span style="height:${p.sourceCrop[3]/p.sourceCrop[2]*100}%">${cropAsset(p.image,p.sourceCrop,'',p.title)}</span></span>`;
   if (p.sourceCrop) {
     const [x,y,w,h] = p.sourceCrop, size = Math.min(w,h);
-    const crop = square && p.realListing ? [x+(w-size)/2,y+(h-size)/2,size,size] : p.sourceCrop;
+    const crop = square ? [x+(w-size)/2,y+(h-size)/2,size,size] : p.sourceCrop;
     return cropAsset(p.image,crop,className,p.title);
   }
   return image(p.image,className,p.title);
@@ -45,10 +46,11 @@ const gap = () => '<div class="space"></div>';
 
 const quantity = id => state.quantities[id] || 0;
 const cartCount = () => state.cart.reduce((sum, id) => sum + quantity(id), 0);
-const bundleCount = () => state.cart.filter(id => products[id].seller === state.bundleSeller).reduce((sum,id) => sum + quantity(id),0);
+const selectedCart = () => selectedCheckoutCart(state.cart, state.checkoutSelections);
+const bundleCount = () => selectedCart().filter(id => products[id].seller === state.bundleSeller).reduce((sum,id) => sum + quantity(id),0);
 
 function totals() {
-  return calculateTotals({ ...state, products, sellers, demoPricing });
+  return calculateTotals({ ...state, cart: selectedCart(), products, sellers, demoPricing });
 }
 
 function statusBar(checkout) {
@@ -65,17 +67,16 @@ function header(checkout = false) {
 function productPage() {
   const p = products[state.productId];
   const seller = sellers[p.seller];
-  if (p.realListing) return `${header()}${listingBody(p, seller, {image,icon,cropAsset,productPhoto,productRec,money,escape,later})}<footer class="bottom"><div class="bottom-buttons"><button class="button primary buy" data-action="buy" data-id="${p.id}">Купить</button><button class="button square" ${later} aria-label="В избранное">${icon('0fd6b.svg')}</button><button class="button square" ${later} aria-label="Написать продавцу">${icon('e0764.svg')}</button></div><div class="home-indicator" aria-hidden="true"></div></footer>`;
+  if (p.realListing) return `${header()}${listingBody(p, seller, {image,icon,cropAsset,productPhoto,productRec,money,escape,later})}<footer class="bottom"><div class="bottom-buttons"><button class="button primary buy" data-action="buy" data-id="${p.id}">Купить</button>${productActions.favoriteButton(p)}<button class="button square" data-action="chat" data-id="${p.id}" aria-label="Написать продавцу" aria-haspopup="dialog">${icon('e0764.svg')}</button></div><div class="home-indicator" aria-hidden="true"></div></footer>`;
   const recs = productRecommendations.filter(id => id !== p.id);
   if (p.id !== 'sneakers') recs.push('sneakers');
   return `${header()}<main class="screen-scroll" aria-label="Карточка товара" tabindex="-1">
-    <div class="gallery horizontal"><div class="photo first ${p.galleryCrop ? 'cropped' : ''}">${productPhoto(p,'',false)}<span class="photo-count">1 из ${p.secondImage ? '8' : '1'}</span></div>${p.secondImage ? `<div class="photo second cropped">${image(p.secondImage,'',p.title)}</div>` : `<div class="photo second">${productPhoto(p)}</div>`}</div>
+    <div class="gallery horizontal"><div class="photo first ${p.galleryCrop ? 'cropped' : ''}">${productPhoto(p,'',false)}</div>${p.secondImage ? `<div class="photo second cropped">${image(p.secondImage,'',p.title)}</div>` : `<div class="photo second">${productPhoto(p)}</div>`}</div>
     <section class="pad"><p class="product-price"><strong>${money(p.price)}</strong></p><h1 class="product-title">${escape(p.title)}</h1><p class="availability">В наличии: несколько</p><div class="anchors">
       <button class="anchor" ${later}>${image('anchor-1-2268.svg')}От 130 ₽, от 1 дня</button><button class="anchor" ${later}>${image('anchor-1-175.svg')}Можно примерить</button>
-      <button class="anchor" ${later}>${image('anchor-1-2315.svg')}От 1 876 ₽ × 4</button><button class="anchor" ${later}>${image('anchor-1-2325.svg')}4,9 · 349 отзывов</button><button class="anchor" ${later}>Ещё 1</button>
+      <button class="anchor" ${later}>${image('anchor-1-2325.svg')}4,9 · 349 отзывов</button><button class="anchor" ${later}>Ещё 1</button>
     </div></section>
     <section class="delivery-section"><div class="pad"><h2>Способ получения</h2><p>Может приехать завтра, от 130 ₽</p></div><div class="delivery-options horizontal"><button class="delivery-option" ${later}><div class="green">Лучшая цена</div><div class="muted">Авито</div><div class="cost">130 ₽, 1–2 дня</div></button><button class="delivery-option" ${later}><div class="purple">Вы уже выбирали</div><div class="muted">Почта России</div><div class="cost">480 ₽, 1–2 дня</div></button><button class="delivery-option" ${later}>Доставка<br>в пункт выдачи<div class="cost">от N ₽</div></button></div></section>
-    <div style="height:40px"></div><section class="pad"><div class="credit"><h2>3 920 ₽ × 4 месяца</h2><p>Первый платёж — через 30 дней после получения заказа</p><span class="help">${icon('38ff4.svg')}</span><div class="months"><button class="button selected" ${later}>4 мес.</button><button class="button" ${later}>5 мес.</button><button class="button" ${later}>6 мес.</button></div><div class="payments"><div class="today"><div class="payment-bars"></div><strong>1 ₽</strong><p>Сегодня</p></div><div><div class="payment-bars rest"><i></i><i></i><i></i><i></i></div><strong>Дальше 4 платежа ежемесячно</strong><p>Всего с переплатой — 15 680 ₽</p></div></div><button class="button primary" ${later}>Купить с доставкой в рассрочку</button></div></section>
     ${gap()}<section class="seller-small pad"><h2>${escape(seller.name)} <span class="green">в сети</span></h2><div class="rating">4,4 ${stars()} N отзывов</div><p>Отвечает в течении N</p><div class="contact-buttons"><button class="button" ${later}>Позвонить</button><button class="button" ${later}>Написать</button></div></section>
     ${gap()}<section class="address pad"><div><span class="metro"></span> Метро <span class="muted">7 мин. ${image('b90f5.svg','icon small')}</span></div><p>Город, улица и дом</p><button ${later} style="color:#0099f7">Показать на карте</button></section>
     ${gap()}<section class="pad"><div class="badge"><div class="badge-image">${image('99e1b.png')}</div><div><h3>Заголовок</h3><p>Описание</p></div>${image('14405.svg','arrow')}</div></section>
@@ -85,7 +86,7 @@ function productPage() {
     ${gap()}<section class="seller-full pad"><h2>${escape(seller.name)}</h2>${image('616e0.png','avatar')}<div class="rating">4,4 ${stars()} N отзывов</div><p>N объявлений</p><button ${later} style="color:#0099f7;font-size:15px">Подписаться</button><div class="badges"><span>879 продаж с Авито Доставкой</span><span>10 лет на Авито</span><span>Документы проверены</span><span>Текст</span><span>Текст</span></div><h3>Екатерина Анисимова</h3><p>Контактное лицо</p></section>
     <div style="height:28px"></div><section class="recommendations"><h2 class="pad">Рекомендации <span class="round-arrow">${image('caa9b.svg')}</span></h2><div class="rec-tabs horizontal"><button class="button selected" ${later}>Похожие объявления</button><button class="button" ${later}>Такие же, как новые</button><button class="button" ${later}>С доставкой</button></div><div class="product-recs horizontal">${recs.map(productRec).join('')}</div></section>
     <section class="item-info"><button class="button" ${later}>Пожаловаться на объявление</button><p>Объявление № 890 089 099</p></section>
-  </main><footer class="bottom"><div class="bottom-buttons"><button class="button primary buy" data-action="buy" data-id="${p.id}">Купить</button><button class="button square" ${later} aria-label="В избранное">${icon('0fd6b.svg')}</button><button class="button square" ${later} aria-label="Написать продавцу">${icon('e0764.svg')}</button></div><div class="home-indicator" aria-hidden="true"></div></footer>`;
+  </main><footer class="bottom"><div class="bottom-buttons"><button class="button primary buy" data-action="buy" data-id="${p.id}">Купить</button>${productActions.favoriteButton(p)}<button class="button square" data-action="chat" data-id="${p.id}" aria-label="Написать продавцу" aria-haspopup="dialog">${icon('e0764.svg')}</button></div><div class="home-indicator" aria-hidden="true"></div></footer>`;
 }
 
 function productRec(id) {
@@ -105,9 +106,11 @@ function recommendationControl(id) {
 
 function checkoutItem(id) {
   const p = products[id];
-  const unitPrice = totals().unitPrices[id];
+  const selected = isCheckoutItemSelected(state.checkoutSelections, id);
+  const unitPrice = totals().unitPrices[id] ?? p.price;
   const price = unitPrice < p.price ? `<strong aria-label="Цена со скидкой">${money(unitPrice)}</strong><s aria-label="Цена без скидки">${money(p.price)}</s>` : `<strong>${money(p.price)}</strong>`;
-  return `<article class="checkout-item" data-product-id="${id}">${productPreview(p,productPhoto(p),`checkout-image ${p.galleryCrop ? 'cropped' : ''}`)}<div class="checkout-item-info"><p class="checkout-price">${price}</p>${productPreview(p,escape(p.title),'checkout-item-title')}${quantityStepper(id)}</div>${image('29bf1.svg','checkmark')}</article>`;
+  const label = selected ? `Исключить из оплаты: ${p.title}` : `Добавить к оплате: ${p.title}`;
+  return `<article class="checkout-item ${selected ? '' : 'is-unselected'}" data-product-id="${id}">${productPreview(p,productPhoto(p),`checkout-image ${p.galleryCrop ? 'cropped' : ''}`)}<div class="checkout-item-info"><p class="checkout-price">${price}</p>${productPreview(p,escape(p.title),'checkout-item-title')}${quantityStepper(id)}</div><button class="checkout-select" data-action="toggle-checkout-item" data-id="${id}" aria-label="${escape(label)}" aria-pressed="${selected}">${image('29bf1.svg','checkmark')}</button></article>`;
 }
 
 function sellerGroup(sellerId) {
@@ -117,7 +120,7 @@ function sellerGroup(sellerId) {
   const tabs = [['self','Самовывоз'],['pickup','Пункт выдачи'],['courier','Курьером']].map(([method,label])=>`<button data-action="delivery-mode" data-seller="${sellerId}" data-method="${method}" class="${mode===method?'selected':''}" aria-pressed="${mode===method}">${label}</button>`).join('');
   const title = mode === 'self' ? 'Адрес продавца' : mode === 'courier' ? 'Ваш адрес' : `${money(seller.delivery)} · <span class="carrier">${seller.carrier}${seller.deliveryIcon?`<span class="carrier-icon ${seller.deliveryIcon === '96df1.png' ? 'avito-carrier' : ''}">${image(seller.deliveryIcon)}</span>`:''}</span>, ${seller.timing}`;
   // Общее оформление доставки на группу, как в макете 34/35.
-  return `<section class="seller-group" data-seller="${sellerId}" aria-label="Товары продавца ${escape(seller.name)}"><div class="group-products">${ids.map(checkoutItem).join('')}</div><div class="delivery-tabs" aria-label="Способ получения">${tabs}</div><div class="delivery-address"><strong>${title}</strong><p>${escape(seller.address || 'Выберите пункт выдачи')}</p><button class="delivery-next" data-action="delivery" data-seller="${sellerId}" aria-label="Изменить доставку">${image('126b9.svg')}</button></div></section>`;
+  return `<section class="seller-group" data-seller="${sellerId}" data-delivery-mode="${mode}" aria-label="Товары продавца ${escape(seller.name)}"><div class="group-products">${ids.map(checkoutItem).join('')}</div><div class="delivery-tabs" aria-label="Способ получения">${tabs}</div><div class="delivery-address"><strong>${title}</strong><p>${escape(seller.address || 'Выберите пункт выдачи')}</p><button class="delivery-next" data-action="delivery" data-seller="${sellerId}" aria-label="Изменить доставку">${image('126b9.svg')}</button></div></section>`;
 }
 
 function checkoutRec(id, index) {
@@ -129,7 +132,7 @@ function checkoutRec(id, index) {
 function checkoutTotals(t = totals()) {
   const offer = `<div class="total-row ${t.productDiscount ? 'subdiscount' : ''}" data-discount-offer><button class="total-label bundle-offer" data-action="bundle"><span class="add-discount">${image('06527.svg')}</span>Скидка 25% от 3 товаров</button>${t.bundleDiscount ? `<span class="discount" data-bundle-discount>−${money(t.bundleDiscount)}</span>` : ''}</div>`;
   return `<section class="totals" aria-label="Расчёт заказа">
-    <div class="total-row"><span>${countLabel(cartCount())}</span><span>${money(t.subtotal)}</span></div>
+    <div class="total-row"><span>${countLabel(t.count)}</span><span>${money(t.subtotal)}</span></div>
     ${t.productDiscount ? `<div class="total-row"><button class="total-label discount-disclosure" data-action="toggle-discounts" aria-expanded="${state.discountsExpanded}" aria-controls="discount-details">Скидки на товары ${image('84108.svg','chevron')}</button><span class="discount">−${money(t.productDiscount)}</span></div><div id="discount-details" ${state.discountsExpanded ? '' : 'hidden'}>${t.discount ? `<div class="total-row subdiscount"><span class="total-label">${icon('9c494.svg')}Хватамба</span><span class="discount">−${money(t.discount)}</span></div>` : ''}${t.walletDiscount ? `<div class="total-row subdiscount"><span class="total-label">${image('payment/85ab0.svg','wallet-discount-icon')}Скидка с кошельком</span><span class="discount">−${money(t.walletDiscount)}</span></div>` : ''}${offer}</div>` : offer}
     <div class="total-row"><span class="total-label"><button class="bonus-switch" data-action="toggle-bonus" role="switch" aria-label="Скидка бонусами" aria-checked="${state.bonusEnabled}"><span class="bonus-track"></span><span class="bonus-knob"></span></button><button class="bonus-info-trigger" data-action="bonus-info" aria-haspopup="dialog">Скидка бонусами ${image('b764d.svg','chevron')}</button></span><span class="${t.bonus ? 'discount' : ''}" data-bonus-amount>${t.bonus ? '−' : ''}${money(t.bonus)}</span></div>
     <div class="total-row"><span class="total-label">Авито Доставка ${image('84108.svg','chevron')}</span><span>${money(t.delivery)}</span></div>
@@ -152,8 +155,19 @@ function checkoutPage() {
   const groupIds = [...new Set(state.cart.map(id => products[id].seller))];
   return `${header(true)}<main class="screen-scroll checkout-scroll" aria-label="Чекаут" tabindex="-1"><button class="guarantee" data-action="save-info" aria-haspopup="dialog">${image('9eab2.svg')}<span>15 минут на проверку · 3 дня на возврат</span></button><div class="seller-groups">${groupIds.map(sellerGroup).join('')}</div>
     ${checkoutTotals(t)}
-    <section class="checkout-recs"><h2>Может заинтересовать</h2><div class="checkout-grid">${checkoutRecommendations.map(checkoutRec).join('')}</div></section>
-  </main><footer class="bottom checkout-bottom"><button class="payment-logo" data-action="payment" aria-label="Способ оплаты" aria-haspopup="dialog" title="${paymentMethods.find(method => method.id === state.paymentMethod).title}">${paymentIcon(state.paymentMethod, image)}</button><button class="button primary pay-button" ${later}>Оплатить ${money(t.total)}</button><div class="home-indicator" aria-hidden="true"></div></footer>`;
+    <section class="checkout-recs"><h2>Рекомендации</h2><div class="checkout-grid">${checkoutRecommendations.map(checkoutRec).join('')}</div></section>
+  </main><footer class="bottom checkout-bottom"><button class="payment-logo" data-action="payment" aria-label="Способ оплаты" aria-haspopup="dialog" title="${paymentMethods.find(method => method.id === state.paymentMethod).title}">${paymentIcon(state.paymentMethod, image)}</button><button class="button primary pay-button ${t.count ? '' : 'empty'}" ${later}>Оплатить ${money(t.total)}</button><div class="home-indicator" aria-hidden="true"></div></footer>`;
+}
+
+function toggleCheckoutSelection(id) {
+  const main = app.querySelector('main');
+  const scrollTop = main.scrollTop;
+  const selected = toggleCheckoutItem(state.checkoutSelections, id);
+  render(scrollTop);
+  app.querySelector(`[data-action="toggle-checkout-item"][data-id="${id}"]`)?.focus({ preventScroll: true });
+  document.querySelector('#announcement').textContent = selected
+    ? `${products[id].title} добавлен к оплате`
+    : `${products[id].title} исключён из оплаты`;
 }
 
 let toastTimer;
@@ -184,7 +198,10 @@ function changeCheckoutQuantity(id, delta, trigger) {
   const visibleOffset = recommendations.offsetTop - oldScroll;
   state.quantities[id] = next;
   if (next && !state.cart.includes(id)) state.cart.push(id);
-  if (!next) state.cart = state.cart.filter(itemId => itemId !== id);
+  if (!next) {
+    state.cart = state.cart.filter(itemId => itemId !== id);
+    delete state.checkoutSelections[id];
+  } else if (previous === 0) state.checkoutSelections[id] = true;
   if (!hadDiscount && totals().discount + totals().bundleDiscount > 0) state.discountsExpanded = true;
 
   const updated = document.createElement('template');
@@ -220,6 +237,7 @@ function changeCheckoutQuantity(id, delta, trigger) {
 
 function render(scrollTop = 0) {
   hidePurchaseToast();
+  productActions.hideToast();
   const isBundle = state.screen === 'bundle';
   app.innerHTML = isBundle || state.screen === 'checkout' ? checkoutPage() : productPage();
   app.dataset.screen = state.screen;
@@ -237,7 +255,10 @@ function changeBundleQuantity(id, delta, trigger) {
   if (next === previous) return;
   state.quantities[id] = next;
   if (next && !state.cart.includes(id)) state.cart.push(id);
-  if (!next) state.cart = state.cart.filter(itemId => itemId !== id);
+  if (!next) {
+    state.cart = state.cart.filter(itemId => itemId !== id);
+    delete state.checkoutSelections[id];
+  } else if (previous === 0) state.checkoutSelections[id] = true;
   if (beforeCount < 3 && bundleCount() >= 3) state.discountsExpanded = true;
   const control = trigger.closest('.rec-control');
   if (previous && next) control.querySelector('.quantity-value').textContent = next;
@@ -274,15 +295,18 @@ function goBack() {
 function add(id) {
   const hadDiscount = totals().discount + totals().bundleDiscount > 0;
   if (!state.cart.includes(id)) { state.cart.push(id); state.quantities[id] = 1; }
+  state.checkoutSelections[id] = true;
   if (!hadDiscount && totals().discount + totals().bundleDiscount > 0) state.discountsExpanded = true;
 }
 
 const deliveryFlow = setupDelivery({ app, state, render, image, icon, statusBar, money, escape, orderSummary(sellerId) {
-  const ids = state.cart.filter(id=>products[id].seller===sellerId);
+  const allIds = state.cart.filter(id=>products[id].seller===sellerId);
+  const ids = allIds.filter(id=>isCheckoutItemSelected(state.checkoutSelections,id));
   const prices = totals().unitPrices;
-  return {summary:`${countLabel(ids.reduce((n,id)=>n+quantity(id),0))} · ${money(ids.reduce((n,id)=>n+prices[id]*quantity(id),0))}`,photo:productPhoto(products[ids[0]])};
+  return {summary:`${countLabel(ids.reduce((n,id)=>n+quantity(id),0))} · ${money(ids.reduce((n,id)=>n+prices[id]*quantity(id),0))}`,photo:productPhoto(products[ids[0] || allIds[0]])};
 } });
 const infoSheets = setupInfoSheets({ app, image });
+const productActions = setupProductActions({ app, state, products, sellers, image, icon, cropAsset, productPhoto, escape, money, hidePurchaseToast });
 const paymentFlow = setupPayment({ app, state, image, onSelect(id) {
   const hadDiscount = totals().productDiscount > 0;
   state.paymentMethod = id;
@@ -299,7 +323,9 @@ function handleAction(event) {
   const button = event.target.closest('button[data-action]');
   if (!button || button.disabled) return;
   const { action, id } = button.dataset;
-  if (action === 'bundle') {
+  if (action === 'favorite') { productActions.favorite(id, button); }
+  else if (action === 'chat') { productActions.open(id, button); }
+  else if (action === 'bundle') {
     state.bundleSeller = checkoutCatalogSeller;
     if (!state.bundleSellers.includes(state.bundleSeller)) state.bundleSellers.push(state.bundleSeller);
     state.bundleRecommendations = prepareBundleCatalog(products, state.bundleSeller);
@@ -318,6 +344,7 @@ function handleAction(event) {
   else if (action === 'delivery') { hidePurchaseToast(); deliveryFlow.open(button.dataset.seller, button); }
   else if (action === 'payment') { hidePurchaseToast(); paymentFlow.open(button); }
   else if (action === 'save-info' || action === 'bonus-info') { hidePurchaseToast(); infoSheets.open(action === 'save-info' ? 'save' : 'bonus', button); }
+  else if (action === 'toggle-checkout-item') { toggleCheckoutSelection(id); }
   else if (action === 'back') {
     goBack();
   } else if (action === 'product' && !products[id].checkoutOnly) navigate('product', id);

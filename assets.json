@@ -2,6 +2,18 @@
   "version": 1,
   "assets": [
     {
+      "id": "chat-reference",
+      "path": "assets/interactions/chat-reference.png",
+      "kind": "image",
+      "used": true
+    },
+    {
+      "id": "favorite-reference",
+      "path": "assets/interactions/favorite-reference.png",
+      "kind": "image",
+      "used": true
+    },
+    {
       "id": "rec-0271",
       "path": "assets/listing/IMG_0271.PNG",
       "kind": "image",
