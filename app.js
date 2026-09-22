@@ -3,8 +3,8 @@ import { checkoutCatalogSeller } from './checkout-catalog.mjs?v=1';
 import { bundlePage, bundleProgress, prepareBundleCatalog } from './bundle.mjs?v=catalog-1';
 import { listingBody } from './listing.js?v=card-cleanup-1';
 import { calculateTotals } from './pricing.mjs?v=recommendations-1';
-import { setupDelivery } from './delivery.mjs?v=modes-1';
-import { selectDeliveryMethod } from './delivery-modes.mjs?v=1';
+import { setupDelivery } from './delivery.mjs?v=address-fee-1';
+import { selectDeliveryMethod } from './delivery-modes.mjs?v=address-fee-1';
 import { setupPayment, paymentIcon, paymentMethods } from './payment.mjs?v=payment-1';
 import { setupInfoSheets } from './info-sheets.mjs?v=info-1';
 import { setupProductActions } from './product-actions.mjs?v=1';
@@ -118,7 +118,7 @@ function sellerGroup(sellerId) {
   const ids = state.cart.filter(id => products[id].seller === sellerId);
   const mode = state.deliveryModes?.[sellerId] || 'pickup';
   const tabs = [['self','Самовывоз'],['pickup','Пункт выдачи'],['courier','Курьером']].map(([method,label])=>`<button data-action="delivery-mode" data-seller="${sellerId}" data-method="${method}" class="${mode===method?'selected':''}" aria-pressed="${mode===method}">${label}</button>`).join('');
-  const title = mode === 'self' ? 'Адрес продавца' : mode === 'courier' ? 'Ваш адрес' : `${money(seller.delivery)} · <span class="carrier">${seller.carrier}${seller.deliveryIcon?`<span class="carrier-icon ${seller.deliveryIcon === '96df1.png' ? 'avito-carrier' : ''}">${image(seller.deliveryIcon)}</span>`:''}</span>, ${seller.timing}`;
+  const title = mode === 'self' ? `${money(seller.delivery)} · Адрес продавца` : mode === 'courier' ? `${money(seller.delivery)} · Ваш адрес` : `${money(seller.delivery)} · <span class="carrier">${seller.carrier}${seller.deliveryIcon?`<span class="carrier-icon ${seller.deliveryIcon === '96df1.png' ? 'avito-carrier' : ''}">${image(seller.deliveryIcon)}</span>`:''}</span>, ${seller.timing}`;
   // Общее оформление доставки на группу, как в макете 34/35.
   return `<section class="seller-group" data-seller="${sellerId}" data-delivery-mode="${mode}" aria-label="Товары продавца ${escape(seller.name)}"><div class="group-products">${ids.map(checkoutItem).join('')}</div><div class="delivery-tabs" aria-label="Способ получения">${tabs}</div><div class="delivery-address"><strong>${title}</strong><p>${escape(seller.address || 'Выберите пункт выдачи')}</p><button class="delivery-next" data-action="delivery" data-seller="${sellerId}" aria-label="Изменить доставку">${image('126b9.svg')}</button></div></section>`;
 }

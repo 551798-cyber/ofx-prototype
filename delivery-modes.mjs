@@ -4,7 +4,7 @@ export const recipientAddress = 'Москва, ул. Лесная, 7';
 export const recipientDetails = 'ул. Лесная, 7, 8 подъезд, 5 эт.';
 export const courierSlots = [
   {id:'today-fast',day:'Сегодня',time:'Как можно скорее, от 1 часа',delivery:349},
-  {id:'today-evening',day:'Сегодня',time:'14:00–22:00',delivery:149},
+  {id:'today-evening',day:'Сегодня',time:'14:00–22:00',delivery:354},
   {id:'tomorrow-morning',day:'Завтра',time:'8:00–14:00',delivery:149},
   {id:'tomorrow-evening',day:'Завтра',time:'14:00–22:00',delivery:149},
   {id:'day3-morning',day:'7 сентября',time:'8:00–14:00',delivery:149},

@@ -1,4 +1,4 @@
-import { sellerMapPage, courierPage, courierSelection, sellerAddress } from './delivery-modes.mjs?v=1';
+import { sellerMapPage, courierPage, courierSelection, sellerAddress } from './delivery-modes.mjs?v=address-fee-1';
 
 export const pickupPoints = {
   avito: { id: 'avito', carrier: 'Авито', title: 'Авито', address: 'Лесная пр-д, 25к3', label: 'Пункт выдачи Авито, Лесная пр-д, 25к3', timing: '1–2 дня', delivery: 100, storage: '10 дней', hint: 'Лучшая цена', deliveryIcon: 'delivery/56c9e.png', x: 55, y: 61 },
