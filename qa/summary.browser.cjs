@@ -6,15 +6,21 @@ const out = process.env.QA_OUTPUT || '/tmp/ofx-summary-qa';
 fs.mkdirSync(out, { recursive: true });
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: 'chrome' });
+  const context = await browser.newContext({ deviceScaleFactor: 1 });
   const errors = [], metrics = [];
   try {
     for (const viewport of [{width:375,height:667},{width:390,height:844},{width:1280,height:900}]) {
-      const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
       const page = await context.newPage();
+      await page.setViewportSize(viewport);
       page.on('pageerror', e => errors.push(e.message));
+      page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
       page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
       await page.goto(url);
-      await page.locator('#loader').waitFor({ state: 'hidden' });
+      await page.locator('#loader').waitFor({ state: 'hidden', timeout:120000 }).catch(async error => {
+        await page.screenshot({ path:`${out}/load-failure.png` });
+        console.error(JSON.stringify({ loader:await page.locator('#loader').innerText(),errors },null,2));
+        throw error;
+      });
       await page.getByRole('button', { name:'Купить', exact:true }).click();
       const total = async () => Number(await page.locator('[data-total]').getAttribute('data-total'));
       const shot = async name => {
@@ -127,7 +133,7 @@ fs.mkdirSync(out, { recursive: true });
       assert.equal(geometry.bodyScroll,0);
       assert(geometry.arrows.every(a => a.width===8 && a.height===16 && a.loaded));
       metrics.push({viewport,...geometry});
-      await context.close();
+      await page.close();
     }
     assert.deepEqual(errors,[]);
     fs.writeFileSync(`${out}/browser-results.json`,JSON.stringify({url,metrics,errors},null,2));

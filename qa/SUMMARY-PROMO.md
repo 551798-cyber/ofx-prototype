@@ -27,5 +27,6 @@ Based on GitHub main `dba5eff16d00a212009cd271f98e9a48aca559d6`.
 - All active asset files exist and are nonempty. No root-relative local asset URLs found.
 - Visual comparison and overlays checked for summary and inline promo states. Measured logical card 355px, rows 323×24px, total row 54px, chevrons 8×16px; no horizontal overflow. Entire summary can be scrolled above the fixed footer.
 - Native iOS/Android keyboards and Safari were not tested. Desktop Chrome viewport checks do not claim real-device coverage.
+- GitHub Pages deployment of `b6a8943` succeeded. Published runtime files matched the tested bytes, and the same browser suite passed on the public URL at all three viewports. The existing initial preload is about 58 MiB; the runner allows 120 seconds for a cold start and retains browser cache between viewport checks.
 
 The Avito-hosting version 1 remains the previous snapshot. This change targets the canonical GitHub prototype.
