@@ -1,7 +1,7 @@
 // Layout: Figma 1649:102173 / 102272 / 102373. All amounts come from pricing.mjs.
 export function orderSummary({ totals: t, state, products, cart, image, productPhoto, money, countLabel, escape }) {
-  const arrow = red => image(red ? 'summary/arrow-red.svg' : 'b764d.svg', 'summary-arrow');
-  const value = (amount, red = false, chevron = true) => `<span class="summary-value ${red ? 'discount' : ''}"><span>${red && amount ? '−' : ''}${money(amount)}</span>${chevron ? arrow(red) : ''}</span>`;
+  const arrow = () => image('b764d.svg', 'summary-arrow');
+  const value = (amount, isDiscount = false, chevron = true) => `<span class="summary-value ${isDiscount ? 'discount' : ''}"><span>${isDiscount && amount ? '−' : ''}${money(amount)}</span>${chevron ? arrow() : ''}</span>`;
   const row = (label, content, action, attrs = '', extra = '') => `<button type="button" class="total-row summary-row ${extra}" data-action="${action}" ${attrs}><span class="summary-label">${label}</span>${content}</button>`;
   const detail = (label, amount) => `<div class="total-row summary-row subdiscount"><span class="summary-label">${escape(label)}</span><span class="summary-value ${amount < 0 ? 'discount' : ''}" data-detail-amount="${amount}">${amount < 0 ? '−' : ''}${money(Math.abs(amount))}</span></div>`;
   const multipleProducts = t.count > 1;
@@ -20,9 +20,10 @@ export function orderSummary({ totals: t, state, products, cart, image, productP
     ? `<form class="total-row promo-form" data-promo-form novalidate><label class="sr-only" for="promo-code">Введите промокод</label><input id="promo-code" name="promo" value="${escape(state.promoDraft)}" placeholder="Введите промокод" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done"><button type="submit" class="sr-only" tabindex="-1">Применить промокод</button></form>`
     : row(state.promoCode ? `Промокод ${escape(state.promoCode)}` : 'Промокод', state.promoCode ? value(t.promoDiscount, true) : '<span class="summary-apply">Применить</span>', 'promo-edit', 'aria-label="'+(state.promoCode ? 'Изменить промокод '+escape(state.promoCode) : 'Применить промокод')+'"', 'summary-promo');
   return `<section class="totals summary" aria-label="Расчёт заказа">
+    <h2 class="summary-heading">Стоимость</h2>
     ${multipleProducts ? row(countLabel(t.count), value(t.subtotal), 'summary-products', `data-summary-products aria-expanded="${state.productsExpanded}" aria-controls="product-details"`) : `<div class="total-row summary-row" data-summary-products><span class="summary-label">${countLabel(t.count)}</span>${value(t.subtotal, false, false)}</div>`}
     ${multipleProducts ? `<div id="product-details" class="summary-details product-details" ${state.productsExpanded ? '' : 'hidden'}>${cart.map(id => detail(`${products[id].title}${state.quantities[id] > 1 ? ` × ${state.quantities[id]}` : ''}`, products[id].price * state.quantities[id])).join('')}</div>` : ''}
-    ${row('Скидки на товары', value(goodsDiscount, !!goodsDiscount), 'toggle-discounts', `aria-expanded="${state.discountsExpanded}" aria-controls="discount-details"`, 'discount-disclosure')}
+    ${row('Скидки на товары', value(goodsDiscount, !!goodsDiscount), 'toggle-discounts', `aria-expanded="${!!(state.discountsExpanded && goodsDiscount)}" aria-controls="discount-details"`, 'discount-disclosure')}
     <div id="discount-details" class="summary-details" ${state.discountsExpanded && goodsDiscount ? '' : 'hidden'}>
       ${t.discount ? row('Хватамба', value(t.discount, true), 'summary-discount-info', 'data-discount="legacy"', 'subdiscount') : ''}
       ${t.walletDiscount ? row('Скидки кошельком', value(t.walletDiscount, true), 'payment', 'aria-haspopup="dialog"', 'subdiscount') : ''}
