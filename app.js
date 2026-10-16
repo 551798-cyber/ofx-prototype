@@ -1,4 +1,4 @@
-import { orderSummary } from './summary.mjs?v=summary-promo-1';
+import { orderSummary } from './summary.mjs?v=summary-details-1';
 import { normalizePromoCode } from './promo.mjs?v=summary-promo-1';
 import { products, sellers, productRecommendations, checkoutRecommendations, demoPricing } from './content.js?v=recommendations-1';
 import { checkoutCatalogSeller } from './checkout-catalog.mjs?v=1';
@@ -16,7 +16,7 @@ const app = document.querySelector('#app');
 const bundleLayer = document.querySelector('#bundle-layer');
 let bundleCheckoutScroll = 0;
 const activeMain = () => (state.screen === 'bundle' ? bundleLayer : app).querySelector('main');
-const state = { screen: 'product', productId: 'sneakers', cart: [], quantities: {}, stack: [], bonusEnabled: true, discountsExpanded: false, promoCode: '', promoDraft: '', promoEditing: false, deliverySelections: { vladimir: { delivery: 175 } }, checkoutSelections: {}, paymentMethod: 'wallet', bundleSellers: [checkoutCatalogSeller], bundleSeller: null, bundleRecommendations: [] };
+const state = { screen: 'product', productId: 'sneakers', cart: [], quantities: {}, stack: [], bonusEnabled: true, discountsExpanded: false, productsExpanded: false, deliveryExpanded: false, promoCode: '', promoDraft: '', promoEditing: false, deliverySelections: { vladimir: { delivery: 175 } }, checkoutSelections: {}, paymentMethod: 'wallet', bundleSellers: [checkoutCatalogSeller], bundleSeller: null, bundleRecommendations: [] };
 const money = n => `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n)} ₽`;
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const image = (file, className = '', alt = '') => `<img src="assets/${escape(file)}" class="${className}" alt="${escape(alt)}" draggable="false">`;
@@ -339,9 +339,14 @@ function handleAction(event) {
   if (!button || button.disabled) return;
   const { action, id } = button.dataset;
   if (action === 'promo-edit') { editPromo(); }
-  else if (action === 'summary-products' || action === 'summary-delivery') {
-    const target = app.querySelector(action === 'summary-products' ? '.seller-groups' : '.delivery-address');
-    target?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  else if (action === 'summary-products') {
+    if (totals().count < 2) return;
+    state.productsExpanded = !state.productsExpanded;
+    refreshCheckoutTotals(action);
+  }
+  else if (action === 'summary-delivery') {
+    state.deliveryExpanded = !state.deliveryExpanded;
+    refreshCheckoutTotals(action);
   }
   else if (action === 'summary-discount-info') {
     document.querySelector('#announcement').textContent = 'Хватамба: скидка действует от трёх товаров в заказе на участвующие демонстрационные товары.';

@@ -30,3 +30,10 @@ Based on GitHub main `dba5eff16d00a212009cd271f98e9a48aca559d6`.
 - GitHub Pages deployment of `b6a8943` succeeded. Published runtime files matched the tested bytes, and the same browser suite passed on the public URL at all three viewports. The existing initial preload is about 58 MiB; the runner allows 120 seconds for a cold start and retains browser cache between viewport checks.
 
 The Avito-hosting version 1 remains the previous snapshot. This change targets the canonical GitHub prototype.
+
+## Product and delivery disclosures — 2026-10-16
+
+- One selected unit has a static subtotal without a chevron. Multiple units reveal selected cart positions, original price × quantity, with a quantity suffix for repeated units. These amounts sum to the subtotal before discounts.
+- Delivery opens independently with the same indentation and row spacing as product discounts. The illustrative pickup breakdown is protection 169 ₽ + shipping 300 ₽ − delivery discount 294 ₽ = the existing 175 ₽ charge. Other delivery modes reconcile to their existing charge; this display does not change pricing.
+- Disclosure states persist through promo application and checkout updates. Returning to one unit removes the product disclosure.
+- `node qa/summary-details.browser.cjs <playwright module>` covers single/multiple/empty carts, quantities, independent disclosures, promo, delivery modes, discount spacing and unchanged totals at 375×667, 390×844 and 1280×900. Screenshots were inspected at the narrowest viewport.

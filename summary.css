@@ -7,9 +7,12 @@
 .summary-arrow { width:8px; height:16px; flex-shrink:0; }
 .summary-apply { color:#757575; white-space:nowrap; }
 .summary-promo .summary-label { display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-.summary #discount-details { display:flex; flex-direction:column; gap:10px; }
-.summary #discount-details[hidden] { display:none; }
-.summary #discount-details .total-row { margin:0; padding-left:22px; }
+.summary .summary-details { display:flex; flex-direction:column; gap:10px; }
+.summary .summary-details[hidden] { display:none; }
+.summary .summary-details .total-row { margin:0; padding-left:22px; }
+.summary #discount-details > .total-row:first-child { margin-top:0; }
+.summary .product-details .summary-label { display:block; overflow-wrap:anywhere; }
+.summary .product-details .total-row { align-items:flex-start; }
 .summary .total-last { height:54px; min-height:54px; padding:10px 0 16px; align-items:flex-end; }
 .summary .total-last strong { font-size:24px; line-height:28px; white-space:nowrap; }
 .summary .bonus-switch { margin:0; }
