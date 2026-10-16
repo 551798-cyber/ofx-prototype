@@ -26,7 +26,7 @@ export function orderSummary({ totals: t, state, products, cart, image, productP
     ${row('Скидки на товары', value(goodsDiscount, !!goodsDiscount), 'toggle-discounts', `aria-expanded="${!!(state.discountsExpanded && goodsDiscount)}" aria-controls="discount-details"`, 'discount-disclosure')}
     <div id="discount-details" class="summary-details" ${state.discountsExpanded && goodsDiscount ? '' : 'hidden'}>
       ${t.discount ? row('Хватамба', value(t.discount, true), 'summary-discount-info', 'data-discount="legacy"', 'subdiscount') : ''}
-      ${t.walletDiscount ? row('Скидки кошельком', value(t.walletDiscount, true), 'payment', 'aria-haspopup="dialog"', 'subdiscount') : ''}
+      ${t.walletDiscount ? detail('Скидки кошельком', -t.walletDiscount) : ''}
     </div>
     ${row('Авито Доставка', value(t.delivery), 'summary-delivery', `aria-expanded="${state.deliveryExpanded}" aria-controls="delivery-details"`)}
     <div id="delivery-details" class="summary-details" ${state.deliveryExpanded ? '' : 'hidden'}>${detail('Программа защиты', protection)}${detail(shippingLabel, shipping)}${detail('Скидка на доставку', -deliveryDiscount)}</div>

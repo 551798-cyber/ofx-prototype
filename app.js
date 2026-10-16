@@ -1,4 +1,4 @@
-import { orderSummary } from './summary.mjs?v=summary-final-1';
+import { orderSummary } from './summary.mjs?v=summary-wallet-1';
 import { normalizePromoCode } from './promo.mjs?v=summary-promo-1';
 import { products, sellers, productRecommendations, checkoutRecommendations, demoPricing } from './content.js?v=recommendations-1';
 import { checkoutCatalogSeller } from './checkout-catalog.mjs?v=1';
