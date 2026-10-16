@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import { products, sellers, demoPricing } from '../content.js';
+import { listingRecommendations } from '../recommendation-listings.mjs';
+import { listingBody } from '../listing.js';
+import { calculateTotals } from '../pricing.mjs';
+import { existsSync, readFileSync } from 'node:fs';
+
+assert.deepEqual(listingRecommendations,['rickLaces','washBag','nikeBuckles','margielaWhite','margielaBlack']);
+const ids=listingRecommendations.slice(0,3);
+assert.equal(new Set(ids.map(id=>products[id].seller)).size,3);
+assert.deepEqual(ids.map(id=>products[id].price-products[id].bonusPerUnit),[241,298,1493]);
+assert.deepEqual(ids.map(id=>products[id].gallery.length),[3,1,2]);
+const helpers={image:f=>`<img src="${f}">`,icon:()=>'',cropAsset:()=>'',productPhoto:p=>`<img src="${p.image}">`,productRec:id=>`<button data-id="${id}"></button>`,money:n=>`${n} ₽`,escape:String,later:'disabled'};
+for(const id of ['sneakers',...ids]){
+  const p=products[id], html=listingBody(p,sellers[p.seller],helpers);
+  assert(p.realListing && !p.checkoutOnly);
+  for(const file of p.gallery) assert(existsSync(new URL(`../assets/${file}`,import.meta.url)));
+  for(const title of ['Способ получения','Характеристики','Описание','Спросите у продавца','Рекомендации']) assert(html.includes(title));
+  assert(html.includes(p.title) && html.includes(p.description));
+  assert(!/undefined|NaN|Продано за месяц|Цена снизилась|Другие объявления пользователя/.test(html));
+  assert(!/photo-count|split-copy|class="credit"|Самовывоз с оплатой через Авито|О самовывозе с онлайн-оплатой|Купить в рассрочку|Можно купить в рассрочку|anchor-1-2315/.test(html));
+  assert(!html.includes(`data-id="${id}"`));
+}
+const appSource=readFileSync(new URL('../app.js',import.meta.url),'utf8');
+const stylesSource=readFileSync(new URL('../styles.css',import.meta.url),'utf8');
+assert(!/photo-count|class="credit"|Купить с доставкой в рассрочку|anchor-1-2315/.test(appSource));
+assert(/\.delivery-option\{[^}]*padding:12px 16px/.test(stylesSource));
+assert(/\.delivery-options\{[^}]*height:auto;align-items:flex-start/.test(stylesSource));
+const t=quantities=>calculateTotals({cart:Object.keys(quantities),quantities,products,sellers,demoPricing,bundleSellers:['vladimir'],paymentMethod:null});
+const three=t({rickLaces:1,washBag:1,nikeBuckles:1});
+assert.equal(three.subtotal,2048);
+assert.equal(three.bonus,16);
+assert.equal(three.delivery,55);
+assert.equal(three.discount,0);
+assert.equal(three.bundleDiscount,0);
+assert.equal(three.total,2087);
+assert.equal(t({rickLaces:3}).bundleDiscount,0);
+assert.equal(t({rickLaces:3}).bonus,24);
+const mixed=t({sneakers:1,premiataLaces:1,flatLaces:1,rickLaces:1,washBag:1,nikeBuckles:1});
+assert.equal(mixed.bundleDiscount,(3590+396+490)*.25);
+assert.equal(mixed.delivery,56);
+assert.equal(mixed.bonus,33);
+assert.equal(mixed.discount,0);
+assert(!products.rickLaces.city && !products.washBag.city);
+assert.equal(products.nikeBuckles.city,'Кострома');
+assert(products.washBag.descriptionExcerpt);
+console.log('Recommendation pages, assets, ordering, sellers and mixed-checkout pricing passed');

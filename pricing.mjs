@@ -1,7 +1,8 @@
 // The plus flow enables 25% within its seller group; other demo rules stay intact.
+import { promoDiscountFor } from './promo.mjs?v=summary-promo-1';
 export const WALLET_DISCOUNT = 100;
 
-export function calculateTotals({ cart, quantities, products, sellers, demoPricing, bonusEnabled = true, deliverySelections = {}, paymentMethod = null, bundleSellers = [] }) {
+export function calculateTotals({ cart, quantities, products, sellers, demoPricing, bonusEnabled = true, deliverySelections = {}, paymentMethod = null, bundleSellers = [], promoCode = '' }) {
   const quantity = id => quantities[id] || 0;
   const count = cart.reduce((sum, id) => sum + quantity(id), 0);
   const subtotal = cart.reduce((sum, id) => sum + products[id].price * quantity(id), 0);
@@ -23,6 +24,7 @@ export function calculateTotals({ cart, quantities, products, sellers, demoPrici
   const bonus = bonusEnabled ? availableBonus : 0;
   const walletDiscount = paymentMethod === 'wallet' ? Math.min(WALLET_DISCOUNT, Math.max(0, subtotal - discount - bundleDiscount - bonus)) : 0;
   const productDiscount = Math.round((discount + bundleDiscount + walletDiscount) * 100) / 100;
-  const total = Math.round((subtotal - productDiscount - bonus + delivery) * 100) / 100;
-  return { count, subtotal, delivery, discount, bundleDiscount, bundleCounts, unitPrices, walletDiscount, productDiscount, availableBonus, bonus, total };
+  const promoDiscount = promoDiscountFor(promoCode, subtotal - productDiscount - bonus);
+  const total = Math.round((subtotal - productDiscount - bonus - promoDiscount + delivery) * 100) / 100;
+  return { count, subtotal, delivery, discount, bundleDiscount, bundleCounts, unitPrices, walletDiscount, productDiscount, availableBonus, bonus, promoDiscount, total };
 }

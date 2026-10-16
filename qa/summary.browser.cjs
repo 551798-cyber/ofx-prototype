@@ -1,0 +1,136 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const { chromium } = require(process.argv[2] || 'playwright');
+const url = process.env.PROTOTYPE_URL || 'http://127.0.0.1:4187';
+const out = process.env.QA_OUTPUT || '/tmp/ofx-summary-qa';
+fs.mkdirSync(out, { recursive: true });
+(async () => {
+  const browser = await chromium.launch({ headless: true, channel: 'chrome' });
+  const errors = [], metrics = [];
+  try {
+    for (const viewport of [{width:375,height:667},{width:390,height:844},{width:1280,height:900}]) {
+      const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+      const page = await context.newPage();
+      page.on('pageerror', e => errors.push(e.message));
+      page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+      await page.goto(url);
+      await page.locator('#loader').waitFor({ state: 'hidden' });
+      await page.getByRole('button', { name:'Купить', exact:true }).click();
+      const total = async () => Number(await page.locator('[data-total]').getAttribute('data-total'));
+      const shot = async name => {
+        await page.locator('.checkout-scroll').evaluate(el => { el.scrollTop = el.querySelector('.totals').offsetTop - 16; });
+        await page.locator('#purchase-toast').waitFor({state:'hidden'});
+        const bottom = await page.locator('.totals').evaluate(el => el.getBoundingClientRect().bottom);
+        const footerTop = await page.locator('.checkout-bottom').evaluate(el => el.getBoundingClientRect().top);
+        assert(bottom <= footerTop, 'Summary can be scrolled completely above the fixed footer');
+        await page.locator('.totals').screenshot({ path:`${out}/${viewport.width}-${name}.png` });
+      };
+      assert.equal(await total(), 3648);
+      await shot('initial');
+      await page.locator('[data-action=toggle-discounts]').click();
+      assert(await page.locator('#discount-details').isVisible());
+      await shot('expanded');
+      await page.locator('[data-action=toggle-discounts]').click();
+      await page.locator('[data-action=toggle-bonus]').click();
+      assert.equal(await total(), 3665);
+      await shot('bonus-off');
+      await page.locator('[data-action=promo-edit]').click();
+      assert(await page.locator('#promo-code').evaluate(el => el === document.activeElement));
+      await shot('input-empty');
+      await page.locator('#promo-code').fill('ivanzolo');
+      assert.equal(await total(), 3665, 'Typing alone must not apply the promo');
+      await shot('input-filled');
+      await page.locator('#promo-code').press('Enter');
+      assert.equal(await total(), 665);
+      await shot('applied');
+      await page.locator('[data-action=toggle-bonus]').click();
+      assert.equal(await total(), 648);
+      assert.match(await page.locator('.pay-button').innerText(), /648/);
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('любой-код');
+      await page.locator('#promo-code').press('Enter');
+      assert.equal(await total(), 648, 'Replacing a code never stacks a second discount');
+      assert.match(await page.locator('[data-action=promo-edit]').innerText(), /ЛЮБОЙ-КОД/);
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('cancel-me');
+      await page.locator('#promo-code').press('Escape');
+      assert.match(await page.locator('[data-action=promo-edit]').innerText(), /ЛЮБОЙ-КОД/);
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('');
+      await page.locator('#promo-code').press('Enter');
+      assert.equal(await total(), 3648);
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('SALE');
+      await page.locator('#promo-code').evaluate(el => el.blur());
+      await page.waitForFunction(() => !document.querySelector('[data-promo-form]'));
+      assert.equal(await total(), 648, 'Blur without a next focus target must commit the draft');
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('');
+      await page.locator('#promo-code').evaluate(el => el.blur());
+      await page.waitForFunction(() => !document.querySelector('[data-promo-form]'));
+      assert.equal(await total(), 3648);
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('SALE');
+      await page.locator('#promo-code').press('Tab');
+      await page.waitForFunction(() => !document.querySelector('[data-promo-form]'));
+      assert.equal(await total(), 648, 'Tab out of the input applies the promo');
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('');
+      await page.locator('#promo-code').press('Enter');
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('SALE');
+      await page.locator('[data-action=toggle-bonus]').hover();
+      await page.mouse.down();
+      await page.waitForTimeout(80);
+      await page.mouse.up();
+      await page.waitForFunction(() => !document.querySelector('[data-promo-form]'));
+      assert.equal(await total(), 665, 'Clicking another control commits promo without losing that action');
+      await page.locator('[data-action=toggle-bonus]').click();
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('MODAL');
+      await page.locator('[data-action=bonus-info]').click();
+      await page.waitForFunction(() => !document.querySelector('[data-promo-form]'));
+      await page.locator('#info-layer [role=dialog]').press('Escape');
+      assert.equal(await page.evaluate(() => document.activeElement?.dataset.action), 'bonus-info', 'Closing a modal after promo blur restores its opener');
+      await page.locator('[data-action=bundle]').click();
+      await page.locator('[data-action=bundle-add][data-id=premiataLaces]').click();
+      await page.locator('[data-action=bundle-add][data-id=flatLaces]').click();
+      await page.locator('.bundle-close').click();
+      assert.equal(await total(), 415);
+      assert.equal(await page.locator('.summary-thumb').count(), 3);
+      await shot('bundle-promo');
+      await page.locator('[data-action=toggle-checkout-item][data-id=flatLaces]').click();
+      assert.equal(await total(), 1044);
+      assert.equal(await page.locator('.summary-thumb').count(), 0);
+      await page.locator('[data-action=payment]').first().click();
+      await page.locator('.payment-option[data-method=sbp]').click();
+      assert.equal(await total(), 1144);
+      await page.locator('[data-action=promo-edit]').click();
+      await page.locator('#promo-code').fill('A'.repeat(32));
+      await page.locator('#promo-code').press('Enter');
+      assert.equal(await total(), 1144);
+      await shot('long-code');
+      await page.locator('[data-action=toggle-checkout-item][data-id=sneakers]').click();
+      assert.equal(await total(), 175, 'Cheap cart is capped at goods amount; delivery stays payable');
+      await page.locator('[data-action=toggle-checkout-item][data-id=premiataLaces]').click();
+      assert.equal(await total(), 0);
+      await shot('empty-cart');
+      const geometry = await page.locator('.totals').evaluate(el => ({
+        width:el.getBoundingClientRect().width, logicalWidth:el.offsetWidth,
+        overflow:el.scrollWidth > el.clientWidth,
+        bodyScroll:document.scrollingElement.scrollTop,
+        rows:[...el.querySelectorAll(':scope > .total-row')].map(x => ({height:x.offsetHeight, x:x.offsetLeft, width:x.offsetWidth})),
+        arrows:[...el.querySelectorAll('.summary-arrow')].map(x => ({width:x.width,height:x.height,loaded:x.complete && x.naturalWidth>0}))
+      }));
+      assert.equal(geometry.logicalWidth,355);
+      assert.equal(geometry.overflow,false);
+      assert.equal(geometry.bodyScroll,0);
+      assert(geometry.arrows.every(a => a.width===8 && a.height===16 && a.loaded));
+      metrics.push({viewport,...geometry});
+      await context.close();
+    }
+    assert.deepEqual(errors,[]);
+    fs.writeFileSync(`${out}/browser-results.json`,JSON.stringify({url,metrics,errors},null,2));
+    console.log('PASS: 3 viewports; promo entry, arbitrary codes, edit, remove, Escape, blur, bonus, bundle, selection, payment, caps, empty cart and local assets.');
+  } finally { await browser.close(); }
+})().catch(e => { console.error(e); process.exitCode=1; });

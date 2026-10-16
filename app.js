@@ -1,8 +1,10 @@
+import { orderSummary } from './summary.mjs?v=summary-promo-1';
+import { normalizePromoCode } from './promo.mjs?v=summary-promo-1';
 import { products, sellers, productRecommendations, checkoutRecommendations, demoPricing } from './content.js?v=recommendations-1';
 import { checkoutCatalogSeller } from './checkout-catalog.mjs?v=1';
 import { bundlePage, bundleProgress, prepareBundleCatalog } from './bundle.mjs?v=catalog-1';
 import { listingBody } from './listing.js?v=card-cleanup-1';
-import { calculateTotals } from './pricing.mjs?v=recommendations-1';
+import { calculateTotals } from './pricing.mjs?v=summary-promo-1';
 import { setupDelivery } from './delivery.mjs?v=address-fee-1';
 import { selectDeliveryMethod } from './delivery-modes.mjs?v=address-fee-1';
 import { setupPayment, paymentIcon, paymentMethods } from './payment.mjs?v=payment-1';
@@ -14,7 +16,7 @@ const app = document.querySelector('#app');
 const bundleLayer = document.querySelector('#bundle-layer');
 let bundleCheckoutScroll = 0;
 const activeMain = () => (state.screen === 'bundle' ? bundleLayer : app).querySelector('main');
-const state = { screen: 'product', productId: 'sneakers', cart: [], quantities: {}, stack: [], bonusEnabled: true, discountsExpanded: true, deliverySelections: { vladimir: { delivery: 175 } }, checkoutSelections: {}, paymentMethod: 'wallet', bundleSellers: [checkoutCatalogSeller], bundleSeller: null, bundleRecommendations: [] };
+const state = { screen: 'product', productId: 'sneakers', cart: [], quantities: {}, stack: [], bonusEnabled: true, discountsExpanded: false, promoCode: '', promoDraft: '', promoEditing: false, deliverySelections: { vladimir: { delivery: 175 } }, checkoutSelections: {}, paymentMethod: 'wallet', bundleSellers: [checkoutCatalogSeller], bundleSeller: null, bundleRecommendations: [] };
 const money = n => `${new Intl.NumberFormat('ru-RU', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n)} ₽`;
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const image = (file, className = '', alt = '') => `<img src="assets/${escape(file)}" class="${className}" alt="${escape(alt)}" draggable="false">`;
@@ -130,14 +132,27 @@ function checkoutRec(id, index) {
 }
 
 function checkoutTotals(t = totals()) {
-  const offer = `<div class="total-row ${t.productDiscount ? 'subdiscount' : ''}" data-discount-offer><button class="total-label bundle-offer" data-action="bundle"><span class="add-discount">${image('06527.svg')}</span>Скидка 25% от 3 товаров</button>${t.bundleDiscount ? `<span class="discount" data-bundle-discount>−${money(t.bundleDiscount)}</span>` : ''}</div>`;
-  return `<section class="totals" aria-label="Расчёт заказа">
-    <div class="total-row"><span>${countLabel(t.count)}</span><span>${money(t.subtotal)}</span></div>
-    ${t.productDiscount ? `<div class="total-row"><button class="total-label discount-disclosure" data-action="toggle-discounts" aria-expanded="${state.discountsExpanded}" aria-controls="discount-details">Скидки на товары ${image('84108.svg','chevron')}</button><span class="discount">−${money(t.productDiscount)}</span></div><div id="discount-details" ${state.discountsExpanded ? '' : 'hidden'}>${t.discount ? `<div class="total-row subdiscount"><span class="total-label">${icon('9c494.svg')}Хватамба</span><span class="discount">−${money(t.discount)}</span></div>` : ''}${t.walletDiscount ? `<div class="total-row subdiscount"><span class="total-label">${image('payment/85ab0.svg','wallet-discount-icon')}Скидка с кошельком</span><span class="discount">−${money(t.walletDiscount)}</span></div>` : ''}${offer}</div>` : offer}
-    <div class="total-row"><span class="total-label"><button class="bonus-switch" data-action="toggle-bonus" role="switch" aria-label="Скидка бонусами" aria-checked="${state.bonusEnabled}"><span class="bonus-track"></span><span class="bonus-knob"></span></button><button class="bonus-info-trigger" data-action="bonus-info" aria-haspopup="dialog">Скидка бонусами ${image('b764d.svg','chevron')}</button></span><span class="${t.bonus ? 'discount' : ''}" data-bonus-amount>${t.bonus ? '−' : ''}${money(t.bonus)}</span></div>
-    <div class="total-row"><span class="total-label">Авито Доставка ${image('84108.svg','chevron')}</span><span>${money(t.delivery)}</span></div>
-    <div class="total-row total-last"><span>Итого</span><strong data-total="${t.total}">${money(t.total)}</strong></div>
-  </section>`;
+  return orderSummary({ totals: t, state, products, cart: selectedCart(), image, productPhoto, money, countLabel, escape });
+}
+
+function editPromo() {
+  state.promoDraft = state.promoCode;
+  state.promoEditing = true;
+  refreshCheckoutTotals();
+  const input = app.querySelector('#promo-code');
+  input.focus({ preventScroll: true });
+  input.select();
+  input.scrollIntoView({ block: 'nearest' });
+}
+
+function submitPromo() {
+  const code = normalizePromoCode(state.promoDraft);
+  state.promoCode = code;
+  state.promoEditing = false;
+  refreshCheckoutTotals('promo-edit');
+  document.querySelector('#announcement').textContent = code
+    ? `Промокод ${code} применён. Итого ${money(totals().total)}`
+    : 'Промокод удалён';
 }
 
 function refreshCheckoutTotals(action) {
@@ -323,7 +338,16 @@ function handleAction(event) {
   const button = event.target.closest('button[data-action]');
   if (!button || button.disabled) return;
   const { action, id } = button.dataset;
-  if (action === 'favorite') { productActions.favorite(id, button); }
+  if (action === 'promo-edit') { editPromo(); }
+  else if (action === 'summary-products' || action === 'summary-delivery') {
+    const target = app.querySelector(action === 'summary-products' ? '.seller-groups' : '.delivery-address');
+    target?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+  else if (action === 'summary-discount-info') {
+    document.querySelector('#announcement').textContent = 'Хватамба: скидка действует от трёх товаров в заказе на участвующие демонстрационные товары.';
+    showPurchaseToast('Хватамба: скидка от 3 товаров');
+  }
+  else if (action === 'favorite') { productActions.favorite(id, button); }
   else if (action === 'chat') { productActions.open(id, button); }
   else if (action === 'bundle') {
     state.bundleSeller = checkoutCatalogSeller;
@@ -365,6 +389,41 @@ function handleAction(event) {
   }
 }
 app.addEventListener('click', handleAction);
+app.addEventListener('input', event => {
+  if (event.target.id !== 'promo-code') return;
+  state.promoDraft = event.target.value;
+});
+app.addEventListener('submit', event => {
+  if (!event.target.matches('[data-promo-form]')) return;
+  event.preventDefault();
+  submitPromo();
+});
+app.addEventListener('keydown', event => {
+  if (event.target.id !== 'promo-code' || event.key !== 'Escape') return;
+  event.preventDefault();
+  state.promoEditing = false;
+  refreshCheckoutTotals('promo-edit');
+});
+// Commit on blur, updating only the promo row so neighbouring click targets
+// and modal openers survive a pointer press or a focus change.
+app.addEventListener('focusout', event => {
+  if (event.target.id !== 'promo-code' || !state.promoEditing || !event.target.isConnected) return;
+  if (event.relatedTarget?.closest('[data-promo-form]')) return;
+  state.promoCode = normalizePromoCode(state.promoDraft);
+  state.promoEditing = false;
+  setTimeout(() => {
+    const form = app.querySelector('[data-promo-form]');
+    if (state.screen !== 'checkout' || !form || state.promoEditing) return;
+    const t = totals();
+    const updated = document.createElement('template');
+    updated.innerHTML = checkoutTotals(t);
+    form.replaceWith(updated.content.querySelector('.summary-promo'));
+    const total = app.querySelector('[data-total]');
+    total.textContent = money(t.total);
+    total.dataset.total = t.total;
+    app.querySelector('.pay-button').textContent = `Оплатить ${money(t.total)}`;
+  }, 0);
+});
 bundleLayer.addEventListener('click', handleAction);
 bundleLayer.addEventListener('keydown', event => {
   if (event.key === 'Escape') { event.preventDefault(); goBack(); return; }
@@ -425,7 +484,7 @@ async function start() {
   document.querySelector('#retry').hidden = true;
   message.textContent = 'Загружаем прототип…';
   try {
-    const response = await fetch('./assets.json?v=recommendations-1', { signal: AbortSignal.timeout(15000) });
+    const response = await fetch('./assets.json?v=summary-promo-1', { signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error('Asset manifest unavailable');
     const manifest = await response.json();
     const urls = [...new Set(manifest.assets.filter(a => a.kind === 'image' && a.used).map(a => a.path))];

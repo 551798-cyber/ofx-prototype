@@ -720,6 +720,12 @@
       "path": "assets/delivery/add.svg",
       "kind": "image",
       "used": true
+    },
+    {
+      "id": "summary-arrow-red",
+      "path": "assets/summary/arrow-red.svg",
+      "kind": "image",
+      "used": true
     }
   ]
 }
